@@ -26,3 +26,26 @@ VM.  Don't use Docker directly from a Windows host, you will have a bad time.
 If you are on an OSX machine --- you can probably go ahead and install 
 docker and docker-compose directly on your OS.  However, Docker filesystem interaction
 is probably faster if you run it from a Linux VM as recommended for Windows hosts. 
+
+USAGE OVERVIEW
+==============
+On a machine that is already configured with docker and docker-compose (see docker.com
+and the internet in general for information on how to install them) you can run the
+Bigfathom application stacks simply by doing this...
+
+1. cd bigfathom_application/application_stack
+2. ./createvolumes.sh
+3. ./start.sh
+
+That will create a running Bigfathom application server (localhost:55580) and a 
+Phpmyadmin server (localhost:44480).  To shut down your stack, follow these
+steps:
+
+1. cd bigfathom_application/application_stack
+2. ./stop.sh
+
+You can restart the stack at anytime by launching just the start.sh script.
+If you want to clear all the persisted memory (stored in docker volumes) run
+the killvolumes.sh script and then re-run the createvolumes.sh script again.
+
+Post your questions and insights at https://bigfathom.org
