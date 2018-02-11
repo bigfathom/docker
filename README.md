@@ -10,6 +10,10 @@ can be found at its official website: https://bigfathom.org
 
 ![Bigfathom Logo](https://bigfathom.org/sites/default/files/bigfathom_arrows_logo_plus_title.png)
 
+All Bigfathom application source codeis available from Official repo at https://github.com/bigfathom/bigfathom_application
+
+All Docker source code is available from the Official repo at https://https://github.com/bigfathom/docker 
+
 WHAT IS DOCKER?
 ===============
 Docker is a fantastic virtualization tool that makes it easier to run collections
@@ -61,3 +65,96 @@ Folder Name | Content Purpose
 ------------ | -------------
 application_stack | This is where you go to launch a running Bigfathom application
 appserver_image | This is where we build the appserver that runs in the stack
+
+STACK COMPOSE FILE
+==================
+An example of launching Bigfathom in a Docker stack is to have a docker-compose.yml
+(such as the one in the application_stack folder of the repo) that looks like
+this one ...
+
+```dockerfile
+
+version: "3.2"
+
+services:
+  
+  appserver:
+      
+    image: bigfathom/application_d7
+    volumes:
+      - web-files:/var/www/html:rw
+      - bucket-files:/var/local/bigfathom-bucket:rw
+    ports:
+      - "55580:80"
+    expose:
+      - "80"
+    command: "/var/machine-scripts/startup.sh INIT"
+    networks:
+      - bigfathom_net
+      
+  db:
+      
+    image: mysql
+    restart: always
+    volumes:
+      - db-files:/var/lib/mysql:rw
+      
+    ports:
+      - "43306:3306"    
+    expose:
+      - "3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: apass2018
+      MYSQL_DATABASE: bigfathom_preview
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apass2018
+    networks:
+      - bigfathom_net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_HOSTS=db
+      - PMA_PORT=3306
+    restart: always
+    ports:
+      - 44480:80
+    volumes:
+      - /sessions
+    networks:
+      - bigfathom_net
+      
+volumes:
+
+  web-files:
+    external:
+      name: appserver_web_bigfathom_preview
+
+  bucket-files:
+    external:
+      name: appserver_bucket_bigfathom_preview
+
+  db-files:
+    external:
+      name: db_bigfathom_preview
+      
+networks:
+  bigfathom_net:
+    external: false
+
+
+```
+
+DOCKER VOLUMES
+==============
+The included docker-compose.yml references three volumes as external,
+so be sure to create them before launching (otherwise you get helpful 
+volume missing errors from Docker).
+
+```bash
+    docker volume create appserver_web_bigfathom_preview
+    docker volume create appserver_bucket_bigfathom_preview
+    docker volume create db_bigfathom_preview
+```
+
+There are helper scripts in the **application_stack** folder to help with this.
