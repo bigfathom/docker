@@ -52,8 +52,8 @@ Post your questions and insights at https://bigfathom.org
 
 FOLDERS
 =======
-application_stack
--- This is where you go to launch a running Bigfathom application
-appserver_image
--- This is where we build the appserver that runs in the stack
 
+Folder Name | Content Purpose
+------------ | -------------
+application_stack | This is where you go to launch a running Bigfathom application
+appserver_image | This is where we build the appserver that runs in the stack
