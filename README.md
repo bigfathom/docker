@@ -10,9 +10,9 @@ can be found at its official website: https://bigfathom.org
 
 ![Bigfathom Logo](https://bigfathom.org/sites/default/files/bigfathom_arrows_logo_plus_title.png)
 
-All Bigfathom application source codeis available from Official repo at https://github.com/bigfathom/bigfathom_application
+All Bigfathom application source code is available from Official repo at https://github.com/bigfathom/bigfathom_application
 
-All Docker source code is available from the Official repo at https://https://github.com/bigfathom/docker 
+All Docker source code is available from the Official repo at https://github.com/bigfathom/docker 
 
 WHAT IS DOCKER?
 ===============
@@ -158,3 +158,14 @@ volume missing errors from Docker).
 ```
 
 There are helper scripts in the **application_stack** folder to help with this.
+
+APPLICATIONS IN STACK
+=====================
+When you launch a stack like the one above, you can point your browser
+to the URLs shown in the table here.
+
+URL  | Application
+---- | ------------
+localhost:55580 | The Bigfathom application with login as admin/admin2017 and several other accounts such as janedoe and johndoe. The developer install sets their passwords as the account name with 2017 appended.
+localhost:44480 | The phpmyadmin pointed at the bigfathom_preview database.  The login credentials are set in the docker-compose.yml file.  (appuser/apass2018)
+
