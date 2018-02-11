@@ -19,7 +19,7 @@ HOW DOES BIGFATHOM RECOMMEND RUNNING THE DOCKER STACK?
 If you are on a Linux machine --- just install docker and docker-compose
 directly into your OS; you are good to go!
 
-If you on a Windows machine --- install Virtualbox 5.x first; then install
+If you are on a Windows machine --- install Virtualbox 5.x first; then install
 an UBUNTU16.x image VM and THEN install docker and docker-compose into that
 VM.  Don't use Docker directly from a Windows host, you will have a bad time.
 
@@ -49,3 +49,11 @@ If you want to clear all the persisted memory (stored in docker volumes) run
 the killvolumes.sh script and then re-run the createvolumes.sh script again.
 
 Post your questions and insights at https://bigfathom.org
+
+FOLDERS
+=======
+application_stack
+-- This is where you go to launch a running Bigfathom application
+appserver_image
+-- This is where we build the appserver that runs in the stack
+
