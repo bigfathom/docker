@@ -20,7 +20,7 @@ Docker is a fantastic virtualization tool that makes it easier to run collection
 of machines, and applications on those machines, on your computer.  You can learn
 more about them at their official website: https://www.docker.com/
 
-The official Bigfathom Docker page is at https://cloud.docker.com/app/bigfathom/repository/docker/bigfathom/application_d7/general
+The official public Bigfathom Docker page is at https://hub.docker.com/r/bigfathom/application_d7/
 
 HOW DOES BIGFATHOM RECOMMEND RUNNING THE DOCKER STACK?
 ======================================================
