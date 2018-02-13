@@ -3,8 +3,6 @@ LABEL author_name="Bigfathom"
 LABEL author_website="https://bigfathom.org"
 LABEL environment_context="DEV"
 
-ENV MACHINE_BUILD_START_TIMESTAMP $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-
 ADD ./machine-scripts /var/machine-scripts
 
 #INSTALL APACHE2
@@ -71,8 +69,7 @@ RUN chown -R www-data:www-data sites
 #Prep the environment for final configuration steps and DEV use of the box
 WORKDIR /var/local/bigfathom-bucket
 RUN echo "Remove this file after initializing bigfathom setup once" > "NOT_INITIALIZED_YET.flag"
-RUN echo "MACHINE_BUILD_FINISHED_TIMESTAMP=$MACHINE_BUILD_FINISHED_TIMESTAMP" > docker-build.txt
-RUN echo "ENVIRONMENT=DEV" >> docker-build.txt
+RUN echo "ENVIRONMENT=DEV" > docker-build.txt
 RUN curl -4 --connect-timeout 10 https://bigfathom.org/docker-build >> docker-build.txt || echo "\nNo https://bigfathom.org/docker-build update info available\n"
 RUN apt-get install -y ufw
 RUN echo "Installed ufw" >> docker-build.txt
@@ -80,10 +77,9 @@ RUN apt-get install -y less vim
 RUN echo "Installed less vim" >> docker-build.txt
 RUN apt-get install -y mysql-client-core-5.7
 RUN echo "Installed mysql client" >> docker-build.txt
-ENV MACHINE_BUILD_FINISHED_TIMESTAMP $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-RUN echo "MACHINE_BUILD_FINISHED_TIMESTAMP=$MACHINE_BUILD_FINISHED_TIMESTAMP" >> docker-build.txt
+RUN echo "MACHINE_BUILD_FINISHED_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> docker-build.txt
 
-ENV DOCKERFILE_MACHINEBUILD_VERSION "20180110.alpha.18"
+ENV DOCKERFILE_MACHINEBUILD_VERSION "20180212.alpha.1"
 
 #Finish at a good folder for DEVs at login
 WORKDIR /var/www/html

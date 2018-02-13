@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSIONINFO=20180212.1
+VERSIONINFO=20180212.3
 echo "Starting $0 v$VERSIONINFO"
 echo
 
@@ -25,22 +25,33 @@ sleep 10
 
 #Create an initial database structure
 echo
+cd /var/www/html
 echo "Creating baseline target Drupal7 database structure ..."
-drush site-install standard --account-name=${DRUPAL_ADMIN_NAME} --account-pass=${DRUPAL_ADMIN_PASSWORD} --db-url=mysql://${DB_USER_NAME}:${DB_USER_PASSWORD}@${DB_HOST}/${DB_NAME} --yes
+BASICSETUP_CMD="drush site-install standard --account-name=${DRUPAL_ADMIN_NAME} --account-pass=${DRUPAL_ADMIN_PASSWORD} --db-url=mysql://${DB_USER_NAME}:${DB_USER_PASSWORD}@${DB_HOST}/${DB_NAME} --yes"
+echo $BASICSETUP_CMD
+eval $BASICSETUP_CMD
 if [ $? -ne 0 ]; then
     echo
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    ehco "ERROR Failed on the site install!!!!!!!!!!!!!!!!"
-    echo "Aborting the setup!"
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    pwd
+    ls
     echo
-    echo "TIP: Retry the startup after shutting the stack down."
-    echo
-    exit 2
-fi
+    echo "Failed basic setup of Drupal --- will try again after a short pause ..."
 
-#Pause for a few seconds to work around possible timing issue
-sleep 10
+    sleep 20
+    eval $BASICSETUP_CMD
+    if [ $? -ne 0 ]; then
+        echo
+        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        echo "ERROR Failed on the site install!!!!!!!!!!!!!!!!"
+        echo "Aborting the setup!"
+        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        echo
+        echo "TIP: Retry the startup after shutting the stack down."
+        echo
+        exit 2
+    fi
+fi
+echo "Basic Drupal is now in place ... going to next steps"
 
 drush vset clean_url 0 --yes
 
