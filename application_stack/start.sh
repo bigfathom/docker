@@ -2,8 +2,21 @@
 
 echo "Starting $0"
 
-ARG=$1
-if [ ! "BINDTERMINAL" = "$ARG" ]; then
+ARG1=$1
+ARG2=$2
+if [ ! "NOPULL" = "$ARG1" ]; then
+    #Output to terminal without locking it
+    PULL_CMD="docker-compose pull"
+    echo $PULL_CMD
+    eval $PULL_CMD
+    echo
+fi
+if [ -z "$ARG2" ]; then
+    LASTARG=$ARG1
+else
+    LASTARG=$ARG2
+fi
+if [ ! "BINDTERMINAL" = "$LASTARG" ]; then
     #Output to terminal without locking it
     LASTARG="&"
 else

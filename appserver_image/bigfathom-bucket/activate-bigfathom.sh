@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSIONINFO=20180210.6
+VERSIONINFO=20180212.1
 echo "Starting $0 v$VERSIONINFO"
 echo
 
@@ -20,10 +20,28 @@ echo "... DB_HOST=$DB_HOST"
 echo "... DB_NAME=$DB_NAME"
 echo
 
+#Pause for a few seconds to work around possible timing issue (server services starting)
+sleep 10
+
 #Create an initial database structure
 echo
 echo "Creating baseline target Drupal7 database structure ..."
 drush site-install standard --account-name=${DRUPAL_ADMIN_NAME} --account-pass=${DRUPAL_ADMIN_PASSWORD} --db-url=mysql://${DB_USER_NAME}:${DB_USER_PASSWORD}@${DB_HOST}/${DB_NAME} --yes
+if [ $? -ne 0 ]; then
+    echo
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    ehco "ERROR Failed on the site install!!!!!!!!!!!!!!!!"
+    echo "Aborting the setup!"
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo
+    echo "TIP: Retry the startup after shutting the stack down."
+    echo
+    exit 2
+fi
+
+#Pause for a few seconds to work around possible timing issue
+sleep 10
+
 drush vset clean_url 0 --yes
 
 #Enable the modules
