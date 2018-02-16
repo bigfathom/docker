@@ -161,8 +161,8 @@ There are helper scripts in the **application_stack** folder to help with this.
 
 Script  | Purpose
 ---- | ------------
-createvolumes.sh | Create volumes in Docker native volume management area.  (Call the **mgt-helpers/point-volumes.sh** afterward to point it into a different area with a symbolic link.)
-kill-volumes.sh | Destroys the volumes.  Use this if you want to clear all your persisted data an start again.
+createvolumes.sh | Create volumes in Docker native volume management area.  (Call the **mgt-helpers/point-volumes.sh** afterward to point them into a different area with a symbolic link.)
+kill-volumes.sh | Destroys the volumes.  Use this if you want to clear all your persisted data and start again.
 mgt-helpers/chown-volumes.sh | Change the ownership of all files and folders in the volumes from the host OS perspective.
 
 APPLICATIONS IN STACK
