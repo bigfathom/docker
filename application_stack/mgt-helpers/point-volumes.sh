@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSIONINFO="20180215.1"
+VERSIONINFO="20180215.2"
 echo "Started $0 v$VERSIONINFO"
 
 STACKNAME="application_stack"
@@ -23,7 +23,7 @@ function showUsage()
     echo "PURPOSE: Softlink the application data OUT OF the docker native volumes"
     echo "         folder into a different root folder."
     echo
-    echo "USAGE: $0 TARGETROOT"
+    echo "USAGE: $0 [TARGETROOT]"
     echo "TARGETROOT = Full path to where the volume softlinks will point"
     echo
 }
@@ -34,6 +34,7 @@ echo "... DOCKER NATIVE ROOT        = $NATIVE_DOCKER_VOLUME_PATH"
 echo "... NATIVE_DOCKER_PATH_BUCKET = $NATIVE_DOCKER_PATH_BUCKET"
 echo "... NATIVE_DOCKER_PATH_WEB    = $NATIVE_DOCKER_PATH_WEB"
 echo "... TARGETROOT                = $TARGETROOT"
+echo "... STACKNAME                 = $STACKNAME"
 if [ ! -d "$TARGETROOT" ]; then
     echo "NOTE: $TARGETROOT does NOT already exist; it will be created"
 fi

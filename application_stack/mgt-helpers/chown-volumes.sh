@@ -3,8 +3,6 @@
 VERSIONINFO="20180215.1"
 echo "Started $0 v$VERSIONINFO"
 
-STACKNAME="application_stack"
-
 BUCKET_NAME="appserver_bucket_bigfathom_preview"
 WEB_NAME="appserver_web_bigfathom_preview"
 
@@ -12,19 +10,18 @@ NATIVE_DOCKER_VOLUME_PATH="/var/lib/docker/volumes"
 NATIVE_DOCKER_PATH_BUCKET="${NATIVE_DOCKER_VOLUME_PATH}/${BUCKET_NAME}"
 NATIVE_DOCKER_PATH_WEB="${NATIVE_DOCKER_VOLUME_PATH}/${WEB_NAME}"
 
-TARGETROOT=$1
-if [ -z "$TARGETROOT" ]; then
-    TARGETROOT="$HOME/docker-appdata"
+USERNAME=$1
+if [ -z "$USERNAME" ]; then
+    USERNAME=$(whoami)
 fi
 
 function showUsage()
 {
     echo
-    echo "PURPOSE: Softlink the application data OUT OF the docker native volumes"
-    echo "         folder into a different root folder."
+    echo "PURPOSE: Change ownership of the volumes."
     echo
-    echo "USAGE: $0 TARGETROOT"
-    echo "TARGETROOT = Full path to where the volume softlinks will point"
+    echo "USAGE: $0 [USERNAME]"
+    echo "USERNAME = Username, defaults to result of whoami call."
     echo
 }
 
@@ -33,10 +30,7 @@ showUsage
 echo "... DOCKER NATIVE ROOT        = $NATIVE_DOCKER_VOLUME_PATH"
 echo "... NATIVE_DOCKER_PATH_BUCKET = $NATIVE_DOCKER_PATH_BUCKET"
 echo "... NATIVE_DOCKER_PATH_WEB    = $NATIVE_DOCKER_PATH_WEB"
-echo "... TARGETROOT                = $TARGETROOT"
-if [ ! -d "$TARGETROOT" ]; then
-    echo "NOTE: $TARGETROOT does NOT already exist; it will be created"
-fi
+echo "... USERNAME                  = $USERNAME"
 
 UNAME=$(uname)
 shopt -s nocasematch
@@ -56,19 +50,7 @@ echo "Press CTRL-C now to cancel or any other key to continue!"
 echo "NOTE: You will be prompted for your sudo password for some steps"
 read
 
-if [ ! -d "$TARGETROOT" ]; then
-    CMD="mkdir -p $TARGETROOT"
-    echo $CMD
-    eval $CMD
-    CMD="chmod 777 $TARGETROOT"
-    echo $CMD
-    eval $CMD
-    echo "WARNING: The permissions on $TARGETROOT are wide-open!"
-    echo "TIP: Lock them down so only your user can rwx in their content"
-    echo
-fi
-
-function convertDockerVolume2Symlink()
+function chownOwnership()
 {
     echo
     FOLDERNAME=$1
@@ -81,37 +63,30 @@ function convertDockerVolume2Symlink()
     fi
     FULLPATH="${RAWPATH}/_data"
     if sudo [ -L "$FULLPATH" ]; then
-        echo "NOTE: $RAWPATH is already symlinked"
-        sudo ls -la $FULLPATH
-        return 1
+        echo "NOTE: $RAWPATH is symlinked"
+        CHOWNPARAM=" -h "
+    else
+        echo "NOTE: $RAWPATH is not symlinked"
+        CHOWNPARAM=""
     fi
 
-    FULLTARGET="${TARGETROOT}/${STACKNAME}/${FOLDERNAME}"
-    echo "$RAWPATH is NOT already a symlink to a directory"
     echo
-    CMD="mkdir -p $FULLTARGET"
+    CMD="sudo chown ${CHOWNPARAM} $USERNAME:$USERNAME * -R"
     echo $CMD
     eval $CMD
-    if sudo [ -d "$FULLPATH" ]; then
-        #Handle case where _data was NOT already deleted
-        CMD="sudo mv ${FULLPATH} ${FULLPATH}_REPLACED"
-        echo $CMD
-        eval $CMD
-    fi
-    CMD="sudo ln -s ${FULLTARGET} ${FULLPATH}"
+
+    CMD="sudo chown ${CHOWNPARAM} $USERNAME:$USERNAME .* -R"
     echo $CMD
     eval $CMD
-    CMD="sudo chmod 777 ${FULLPATH}"
-    echo $CMD
-    eval $CMD
-    echo "WARNING: The permissions on $FULLPATH are wide-open!"
+
+    echo
     sudo ls -la ${FULLPATH}
 
     return 0
 }
 
-convertDockerVolume2Symlink "$BUCKET_NAME"
-convertDockerVolume2Symlink "$WEB_NAME"
+chownOwnership "$BUCKET_NAME"
+chownOwnership "$WEB_NAME"
 
 echo
 echo "Finished $0"

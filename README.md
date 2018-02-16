@@ -152,12 +152,18 @@ so be sure to create them before launching (otherwise you get helpful
 volume missing errors from Docker).
 
 ```bash
-    docker volume create appserver_web_bigfathom_preview
-    docker volume create appserver_bucket_bigfathom_preview
-    docker volume create db_bigfathom_preview
+   docker volume create appserver_web_bigfathom_preview
+   docker volume create appserver_bucket_bigfathom_preview
+   docker volume create db_bigfathom_preview
 ```
 
 There are helper scripts in the **application_stack** folder to help with this.
+
+Script  | Purpose
+---- | ------------
+createvolumes.sh | Create volumes in Docker native volume management area.  (Call the **mgt-helpers/point-volumes.sh** afterward to point it into a different area with a symbolic link.)
+kill-volumes.sh | Destroys the volumes.  Use this if you want to clear all your persisted data an start again.
+mgt-helpers/chown-volumes.sh | Change the ownership of all files and folders in the volumes from the host OS perspective.
 
 APPLICATIONS IN STACK
 =====================
