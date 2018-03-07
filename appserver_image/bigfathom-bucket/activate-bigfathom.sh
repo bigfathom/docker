@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSIONINFO=20180212.3
+VERSIONINFO=20180306.1
 echo "Starting $0 v$VERSIONINFO"
 echo
 
@@ -27,7 +27,7 @@ sleep 10
 echo
 cd /var/www/html
 echo "Creating baseline target Drupal7 database structure ..."
-BASICSETUP_CMD="drush site-install standard --account-name=${DRUPAL_ADMIN_NAME} --account-pass=${DRUPAL_ADMIN_PASSWORD} --db-url=mysql://${DB_USER_NAME}:${DB_USER_PASSWORD}@${DB_HOST}/${DB_NAME} --yes"
+BASICSETUP_CMD="drush site-install standard --account-name=${DRUPAL_ADMIN_NAME} --account-pass=${DRUPAL_ADMIN_PASSWORD} --db-url=mysql://${DB_USER_NAME}:${DB_USER_PASSWORD}@${DB_HOST}/${DB_NAME} install_configure_form.update_status_module='array(FALSE,FALSE)' --yes"
 echo $BASICSETUP_CMD
 eval $BASICSETUP_CMD
 if [ $? -ne 0 ]; then
