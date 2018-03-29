@@ -5,8 +5,12 @@ LABEL environment_context="DEV"
 
 ADD ./machine-scripts /var/machine-scripts
 
-#INSTALL APACHE2
+#Install core utilities
+ARG APT_GET_FORCED_DATE=2018-03-28
 RUN apt-get update
+RUN apt-get install -y apt-utils
+
+#INSTALL APACHE2
 RUN apt-get install -y apache2
 RUN a2enmod rewrite
 
@@ -20,6 +24,7 @@ RUN apt-get install -y php7.0-json
 RUN apt-get install -y php7.0-xml 
 RUN apt-get install -y php7.0-mysql
 RUN apt-get install -y php7.0-opcache
+RUN apt-get install -y php7.0-gmp
 RUN apt-get install -y libapache2-mod-php7.0
 RUN apt-get install -y php7.0-cli 
 
@@ -32,8 +37,8 @@ RUN apt-get install -y rsync
 # See https://www.drupal.org/node/3060/release
 WORKDIR /var/www/html
 RUN rm -rf /var/www/html
-ARG DRUPAL_VERSION=7.56
-ARG DRUPAL_MD5=5d198f40f0f1cbf9cdf1bf3de842e534
+ARG DRUPAL_VERSION=7.58
+ARG DRUPAL_MD5=c59949bcfd0d68b4f272bc05a91d4dc6
 
 RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
 	&& echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
@@ -79,7 +84,7 @@ RUN apt-get install -y mysql-client-core-5.7
 RUN echo "Installed mysql client" >> docker-build.txt
 RUN echo "MACHINE_BUILD_FINISHED_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> docker-build.txt
 
-ENV DOCKERFILE_MACHINEBUILD_VERSION "20180212.alpha.1"
+ENV DOCKERFILE_MACHINEBUILD_VERSION "20180328.beta.2"
 
 #Finish at a good folder for DEVs at login
 WORKDIR /var/www/html
