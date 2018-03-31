@@ -152,9 +152,9 @@ so be sure to create them before launching (otherwise you get helpful
 volume missing errors from Docker).
 
 ```bash
-   docker volume create appserver_web_bigfathom_preview
-   docker volume create appserver_bucket_bigfathom_preview
-   docker volume create db_bigfathom_preview
+    docker volume create appserver_web_bigfathom_preview
+    docker volume create appserver_bucket_bigfathom_preview
+    docker volume create db_bigfathom_preview
 ```
 
 There are helper scripts in the **application_stack** folder to help with this.
