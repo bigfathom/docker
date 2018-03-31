@@ -4,8 +4,8 @@ services:
   
   appserver:
       
-    #image: bigfathom/application_d7
-    image: local/bigfathom/application_d7:latest
+    image: bigfathom/application_d7
+    #EG image: local/bigfathom/application_d7:latest
     volumes:
       - web-files:/var/www/html:rw
       - bucket-files:/var/local/bigfathom-bucket:rw

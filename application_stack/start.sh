@@ -1,6 +1,7 @@
 #!/bin/bash
 
-echo "Starting $0"
+VERSIONINFO=20180331.1
+echo "Starting $0 v$VERSIONINFO"
 
 ARG1=$1
 ARG2=$2
@@ -39,4 +40,4 @@ fi
 echo "$CMD"
 eval "$CMD"
 
-echo "Finished $0"
+echo "Finished $0 v$VERSIONINFO"

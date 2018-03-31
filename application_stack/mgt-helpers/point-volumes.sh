@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSIONINFO="20180215.2"
+VERSIONINFO="20180331.1"
 echo "Started $0 v$VERSIONINFO"
 
 STACKNAME="application_stack"
@@ -69,14 +69,15 @@ if [ ! -d "$TARGETROOT" ]; then
     echo
 fi
 
+POINTFAILED="NO"
 function convertDockerVolume2Symlink()
 {
     echo
-    FOLDERNAME=$1
-    RAWPATH="${NATIVE_DOCKER_VOLUME_PATH}/${FOLDERNAME}"
+    VOLNAME=$1
+    RAWPATH="${NATIVE_DOCKER_VOLUME_PATH}/${VOLNAME}"
     if sudo [ ! -d "$RAWPATH" ]; then
         echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        echo "ERROR: Did NOT find folder for volume $FOLDERNAME"
+        echo "ERROR: Did NOT find folder for volume $VOLNAME"
         echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
         return 2
     fi
@@ -87,9 +88,20 @@ function convertDockerVolume2Symlink()
         return 1
     fi
 
-    FULLTARGET="${TARGETROOT}/${STACKNAME}/${FOLDERNAME}"
+    FULLTARGET="${TARGETROOT}/${STACKNAME}/${VOLNAME}"
     echo "$RAWPATH is NOT already a symlink to a directory"
     echo
+
+    if [ -d "$FULLTARGET" ]; then
+        POINTFAILED="YES"
+        echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        echo "FAILED POINTING $VOLNAME because TARGET ALREADY EXISTS!"
+        echo "TIP: Rename the target and retry or delete it and retry"
+        echo "     $FULLTARGET"
+        echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        return 2
+    fi
+
     CMD="mkdir -p $FULLTARGET"
     echo $CMD
     eval $CMD
@@ -99,9 +111,11 @@ function convertDockerVolume2Symlink()
         echo $CMD
         eval $CMD
     fi
+
     CMD="sudo ln -s ${FULLTARGET} ${FULLPATH}"
     echo $CMD
     eval $CMD
+
     CMD="sudo chmod 777 ${FULLPATH}"
     echo $CMD
     eval $CMD
@@ -113,6 +127,12 @@ function convertDockerVolume2Symlink()
 
 convertDockerVolume2Symlink "$BUCKET_NAME"
 convertDockerVolume2Symlink "$WEB_NAME"
+
+if [ ! "NO" = "$POINTFAILED" ]; then
+    echo
+    echo "DETECTED ONE OR MORE ERRORS on pointing the volumes!"
+    echo
+fi
 
 echo
 echo "Finished $0"
