@@ -6,7 +6,7 @@ LABEL environment_context="DEV"
 ADD ./machine-scripts /var/machine-scripts
 
 #Install core utilities
-ARG APT_GET_FORCED_DATE=2018-03-31
+ARG APT_GET_FORCED_DATE=2018-04-14
 RUN apt-get update
 RUN apt-get install -y apt-utils
 
@@ -72,6 +72,7 @@ RUN ln -s /var/local/bigfathom-bucket/bigfathom_application/drupal7/all/themes/o
 
 #Set the ownership of all the files
 WORKDIR /var/www/html
+RUN chgrp -R www-data .
 RUN chown -R www-data:www-data sites
 
 #Prep the environment for final configuration steps and DEV use of the box
@@ -87,7 +88,7 @@ RUN apt-get install -y mysql-client-core-5.7
 RUN echo "Installed mysql client" >> docker-build.txt
 RUN echo "MACHINE_BUILD_FINISHED_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> docker-build.txt
 
-ENV DOCKERFILE_MACHINEBUILD_VERSION "20180331.beta.1"
+ENV DOCKERFILE_MACHINEBUILD_VERSION "20180414.beta.1"
 
 #Finish at a good folder for DEVs at login
 WORKDIR /var/www/html
