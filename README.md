@@ -8,7 +8,7 @@ Bigfathom is an open-source application that helps people organize their thought
 and collaborate with others on common goals.  More information about it 
 can be found at its official website: https://bigfathom.org
 
-![Bigfathom Logo](https://bigfathom.org/sites/default/files/bigfathom_arrows_logo_plus_title.png)
+![Bigfathom Logo](https://github.com/bigfathom/docker/misc/bigfathom_arrows_logo_plus_title.png) 
 
 All Bigfathom application source code is available from Official repo at https://github.com/bigfathom/bigfathom_application
 
